@@ -2,31 +2,36 @@ import { cacheLife } from "next/cache";
 import { friendlyMessage } from "./errors";
 import { ApiError } from "./http";
 import { getRecentApods, type Apod } from "./nasa";
+import { FAILURE_LIFE, toFailure, type Result } from "./result";
 
 type Week = { items: Apod[]; fetchedAt: string };
 
-// ONE NASA request covers the whole week, and the result is cached.
-// Arguments and return values must be serializable, so this returns plain data.
-// If the fetch throws, nothing is returned, so an error is not stored as if it were data.
-export async function getWeekOfApod(): Promise<Week> {
+// ONE NASA request covers the whole week, and a good result is cached for hours.
+// A failure is returned as plain data (errors thrown inside a cached function lose
+// their details in production) and is given a near-zero lifetime so it is never remembered.
+export async function getWeekOfApod(): Promise<Result<Week>> {
   "use cache";
-  cacheLife("hours");
 
-  const items = await getRecentApods(7);
-  if (items.length === 0) {
-    throw new ApiError("NASA returned no usable pictures", "http");
+  try {
+    const items = await getRecentApods(7);
+    if (items.length === 0) throw new ApiError("NASA returned no usable pictures", "http");
+
+    cacheLife("hours");
+    // `new Date()` is allowed inside a cached scope (the build rejects it elsewhere).
+    return { ok: true, data: { items, fetchedAt: new Date().toISOString() } };
+  } catch (error) {
+    cacheLife(FAILURE_LIFE);
+    return { ok: false, failure: toFailure(error) };
   }
-
-  // `new Date()` is allowed inside a cached scope (the build rejects it elsewhere).
-  return { items, fetchedAt: new Date().toISOString() };
 }
 
 export type WeekResult = ({ ok: true } & Week) | { ok: false; message: string };
 
-// Not cached: turns success and failure into plain data the page can show.
+// Not cached: turns the result into what the page shows.
 export async function loadWeek(): Promise<WeekResult> {
   try {
-    return { ok: true, ...(await getWeekOfApod()) };
+    const result = await getWeekOfApod();
+    return result.ok ? { ok: true, ...result.data } : { ok: false, message: friendlyMessage(result.failure) };
   } catch (error) {
     return { ok: false, message: friendlyMessage(error) };
   }

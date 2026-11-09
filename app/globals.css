@@ -24,3 +24,8 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Dark styling for the ISS map tiles */
+.iss-tiles {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.95);
+}
