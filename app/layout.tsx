@@ -15,7 +15,7 @@ const exo = Exo_2({
 
 export const metadata: Metadata = {
   title: "Space dashboard",
-  description: "Astronomy picture of the day, near-Earth asteroids, and a live ISS tracker.",
+  description: "Astronomy picture of the day, near-Earth asteroids, a live ISS tracker, and the constellations above you.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
