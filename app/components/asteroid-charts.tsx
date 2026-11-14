@@ -16,10 +16,10 @@ import {
 import type { DayCount, ScatterPoint } from "../lib/asteroid-filters";
 
 const VIOLET = "#a78bfa";
-const RED = "#f87171";
-const GRID = "#1e293b";
-const AXIS = "#94a3b8";
-const tooltipBox = { background: "#0f172a", border: "1px solid #334155", borderRadius: 8, color: "#e2e8f0" };
+const RED = "#fb7185"; // rose, so hazards still stand out against the purple
+const GRID = "#2e1065";
+const AXIS = "#a78bfa";
+const tooltipBox = { background: "#0d0626", border: "1px solid #7c3aed", borderRadius: 8, color: "#ede9fe" };
 
 // ResponsiveContainer needs a size to draw into before the browser measures one.
 const initial = { width: 600, height: 300 };
@@ -30,15 +30,15 @@ export default function AsteroidCharts({ days, points }: { days: DayCount[]; poi
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
-      <figure>
-        <figcaption className="mb-3 font-semibold text-white">Close approaches per day</figcaption>
+      <figure className="panel panel-hover p-4">
+        <figcaption className="mb-3 font-display text-sm font-semibold tracking-wide text-white">Close approaches per day</figcaption>
         <div role="img" aria-label="Stacked bar chart of how many asteroids pass Earth each day" className="h-72">
           <ResponsiveContainer width="100%" height="100%" initialDimension={initial}>
             <BarChart data={days} margin={{ top: 8, right: 8, bottom: 8, left: -16 }}>
               <CartesianGrid stroke={GRID} vertical={false} />
               <XAxis dataKey="date" stroke={AXIS} tickFormatter={(d: string) => d.slice(5)} />
               <YAxis stroke={AXIS} allowDecimals={false} />
-              <Tooltip contentStyle={tooltipBox} cursor={{ fill: "#1e293b66" }} />
+              <Tooltip contentStyle={tooltipBox} cursor={{ fill: "#7c3aed33" }} />
               <Legend />
               <Bar dataKey="other" name="Other" stackId="a" fill={VIOLET} />
               <Bar dataKey="hazardous" name="Potentially hazardous" stackId="a" fill={RED} />
@@ -47,8 +47,8 @@ export default function AsteroidCharts({ days, points }: { days: DayCount[]; poi
         </div>
       </figure>
 
-      <figure>
-        <figcaption className="mb-3 font-semibold text-white">Size against miss distance</figcaption>
+      <figure className="panel panel-hover p-4">
+        <figcaption className="mb-3 font-display text-sm font-semibold tracking-wide text-white">Size against miss distance</figcaption>
         <div role="img" aria-label="Scatter chart of asteroid size against miss distance, both on log scales" className="h-72">
           <ResponsiveContainer width="100%" height="100%" initialDimension={initial}>
             <ScatterChart margin={{ top: 8, right: 16, bottom: 24, left: 0 }}>
