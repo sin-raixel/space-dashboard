@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LuCrosshair, LuEye, LuMaximize2, LuTriangleAlert } from "react-icons/lu";
 import { loadAsteroids } from "../lib/asteroids";
 import {
   SIZE_OPTIONS,
@@ -10,23 +11,13 @@ import {
   scatterPoints,
   summarize,
 } from "../lib/asteroid-filters";
-import { safeNasaUrl } from "../lib/nasa";
+import AsteroidCard from "./asteroid-card";
 import AsteroidCharts from "./asteroid-charts";
+import StatCard from "./stat-card";
 
 type Props = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
 const whole = new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 });
-const field = "field";
-
-function Stat({ label, value, note }: { label: string; value: string; note?: string }) {
-  return (
-    <div className="panel panel-hover p-4">
-      <p className="eyebrow !text-[0.65rem] !tracking-[0.2em]">{label}</p>
-      <p className="mt-2 font-display text-2xl font-bold text-white">{value}</p>
-      {note && <p className="mt-1 truncate text-sm text-violet-200/70">{note}</p>}
-    </div>
-  );
-}
 
 export default async function AsteroidsSection({ searchParams }: Props) {
   // Reading searchParams makes this part render at request time, inside <Suspense>.
@@ -60,20 +51,29 @@ export default async function AsteroidsSection({ searchParams }: Props) {
         {result.asteroids.length} objects in total.
       </p>
 
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <Stat label="Showing" value={String(stats.total)} note={`of ${result.asteroids.length} objects`} />
-        <Stat label="Potentially hazardous" value={String(stats.hazardous)} />
-        <Stat
+      <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <StatCard
+          label="Showing"
+          value={String(stats.total)}
+          note={`of ${result.asteroids.length} objects`}
+          icon={<LuEye />}
+        />
+        <StatCard label="Potentially hazardous" value={String(stats.hazardous)} icon={<LuTriangleAlert />} />
+        <StatCard
           label="Closest approach"
-          value={stats.closest ? `${stats.closest.missDistanceLunar.toFixed(1)} LD` : "-"}
+          value={stats.closest ? stats.closest.missDistanceLunar.toFixed(1) : "-"}
+          unit={stats.closest ? "LD" : undefined}
           note={stats.closest?.name}
+          icon={<LuCrosshair />}
         />
-        <Stat
+        <StatCard
           label="Largest"
-          value={stats.largest ? `${whole.format(diameterM(stats.largest))} m` : "-"}
+          value={stats.largest ? whole.format(diameterM(stats.largest)) : "-"}
+          unit={stats.largest ? "m" : undefined}
           note={stats.largest?.name}
+          icon={<LuMaximize2 />}
         />
-      </div>
+      </dl>
 
       {/* A plain GET form: filters live in the URL, so a filtered view can be shared or bookmarked. */}
       <form method="get" action="/asteroids" className="panel flex flex-wrap items-end gap-x-6 gap-y-4 p-4">
@@ -83,7 +83,7 @@ export default async function AsteroidsSection({ searchParams }: Props) {
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Minimum size
-          <select name="minSize" defaultValue={String(filters.minSizeM)} className={field}>
+          <select name="minSize" defaultValue={String(filters.minSizeM)} className="field">
             {SIZE_OPTIONS.map((size) => (
               <option key={size} value={size}>
                 {size === 0 ? "Any size" : `${size} m or more`}
@@ -93,7 +93,7 @@ export default async function AsteroidsSection({ searchParams }: Props) {
         </label>
         <label className="flex flex-col gap-1 text-sm">
           Sort by
-          <select name="sort" defaultValue={filters.sort} className={field}>
+          <select name="sort" defaultValue={filters.sort} className="field">
             {SORT_OPTIONS.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
@@ -115,55 +115,18 @@ export default async function AsteroidsSection({ searchParams }: Props) {
         <>
           <AsteroidCharts days={perDayCounts(rows)} points={scatterPoints(rows)} />
 
-          <div className="panel overflow-x-auto">
-            <table className="w-full min-w-[40rem] text-left text-sm">
-              <caption className="sr-only">Near-Earth asteroids and their close approaches</caption>
-              <thead className="bg-violet-950/70 font-display text-[0.7rem] tracking-[0.18em] text-violet-300 uppercase">
-                <tr>
-                  <th scope="col" className="px-4 py-3">Name</th>
-                  <th scope="col" className="px-4 py-3">Date</th>
-                  <th scope="col" className="px-4 py-3">Size</th>
-                  <th scope="col" className="px-4 py-3">Miss distance</th>
-                  <th scope="col" className="px-4 py-3">Speed</th>
-                  <th scope="col" className="px-4 py-3">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-violet-400/10">
-                {rows.map((a) => {
-                  const link = safeNasaUrl(a.jplUrl);
-                  return (
-                    <tr key={`${a.id}-${a.date}`} className="transition-colors hover:bg-violet-500/10">
-                      <th scope="row" className="px-4 py-3 font-medium text-white">
-                        {link ? (
-                          <a href={link} target="_blank" rel="noreferrer" className="glow-link !text-white">
-                            {a.name}
-                          </a>
-                        ) : (
-                          a.name
-                        )}
-                      </th>
-                      <td className="px-4 py-3">{a.date}</td>
-                      <td className="px-4 py-3">
-                        {whole.format(a.diameterMinKm * 1000)}&ndash;{whole.format(a.diameterMaxKm * 1000)} m
-                      </td>
-                      <td className="px-4 py-3">
-                        {a.missDistanceLunar.toFixed(1)} LD
-                        <span className="block text-xs text-violet-300/50">{whole.format(a.missDistanceKm)} km</span>
-                      </td>
-                      <td className="px-4 py-3">{whole.format(a.velocityKmh)} km/h</td>
-                      <td className="px-4 py-3">
-                        {a.hazardous ? (
-                          <span className="rounded-full border border-rose-400/30 bg-rose-500/15 px-2 py-1 text-xs text-rose-300 shadow-[0_0_12px_-2px_rgb(251_113_133/0.6)]">Potentially hazardous</span>
-                        ) : (
-                          <span className="text-violet-300/40">&mdash;</span>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <section aria-labelledby="approaches-heading">
+            <h2 id="approaches-heading" className="eyebrow mb-5">
+              Every close approach
+            </h2>
+            <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {rows.map((a) => (
+                <li key={`${a.id}-${a.date}`}>
+                  <AsteroidCard asteroid={a} />
+                </li>
+              ))}
+            </ul>
+          </section>
         </>
       )}
 
