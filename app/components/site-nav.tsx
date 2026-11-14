@@ -1,23 +1,33 @@
 import Link from "next/link";
+import { LuImage, LuOrbit, LuSatellite } from "react-icons/lu";
 
 const links = [
-  { id: "apod", href: "/", label: "Picture of the day" },
-  { id: "asteroids", href: "/asteroids", label: "Asteroids" },
-  { id: "iss", href: "/iss", label: "ISS tracker" },
+  { id: "apod", href: "/", label: "Picture of the day", Icon: LuImage },
+  { id: "asteroids", href: "/asteroids", label: "Asteroids", Icon: LuOrbit },
+  { id: "iss", href: "/iss", label: "ISS tracker", Icon: LuSatellite },
 ] as const;
 
-export default function SiteNav({ current }: { current: (typeof links)[number]["id"] }) {
+export type NavId = (typeof links)[number]["id"];
+
+export default function SiteNav({ current }: { current: NavId }) {
   return (
-    <nav aria-label="Dashboard sections" className="mb-10 border-b border-slate-800 pb-4">
-      <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
-        {links.map((link) => (
-          <li key={link.id}>
-            <Link
-              href={link.href}
-              aria-current={current === link.id ? "page" : undefined}
-              className={current === link.id ? "text-violet-300" : "hover:text-white"}
-            >
-              {link.label}
+    <nav aria-label="Dashboard sections" className="mb-12 flex flex-wrap items-center justify-between gap-4">
+      <Link
+        href="/"
+        className="group flex items-center gap-2 font-display text-sm font-bold tracking-[0.25em] text-white uppercase"
+      >
+        <span
+          aria-hidden="true"
+          className="size-3 rounded-full bg-gradient-to-br from-violet-300 to-fuchsia-600 shadow-[0_0_14px_3px_rgb(139_92_246/0.8)] transition-transform duration-300 group-hover:scale-150"
+        />
+        Cosmos
+      </Link>
+      <ul className="flex flex-wrap gap-2 rounded-full border border-violet-400/20 bg-violet-950/40 p-1.5 text-sm font-medium backdrop-blur">
+        {links.map(({ id, href, label, Icon }) => (
+          <li key={id}>
+            <Link href={href} aria-current={current === id ? "page" : undefined} className="nav-link">
+              <Icon aria-hidden="true" />
+              {label}
             </Link>
           </li>
         ))}
