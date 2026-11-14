@@ -14,6 +14,7 @@ import {
   ZAxis,
 } from "recharts";
 import type { DayCount, ScatterPoint } from "../lib/asteroid-filters";
+import GlowCard from "./glow-card";
 
 const VIOLET = "#a78bfa";
 const RED = "#fb7185"; // rose, so hazards still stand out against the purple
@@ -30,8 +31,12 @@ export default function AsteroidCharts({ days, points }: { days: DayCount[]; poi
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
-      <figure className="panel panel-hover p-4">
-        <figcaption className="mb-3 font-display text-sm font-semibold tracking-wide text-white">Close approaches per day</figcaption>
+      <GlowCard className="hud-corners p-5">
+       <figure>
+        <figcaption className="mb-4">
+          <span className="eyebrow !text-[0.65rem]">Per day</span>
+          <span className="mt-1 block font-display text-sm font-semibold tracking-wide text-white">Close approaches per day</span>
+        </figcaption>
         <div role="img" aria-label="Stacked bar chart of how many asteroids pass Earth each day" className="h-72">
           <ResponsiveContainer width="100%" height="100%" initialDimension={initial}>
             <BarChart data={days} margin={{ top: 8, right: 8, bottom: 8, left: -16 }}>
@@ -45,13 +50,18 @@ export default function AsteroidCharts({ days, points }: { days: DayCount[]; poi
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </figure>
+       </figure>
+      </GlowCard>
 
-      <figure className="panel panel-hover p-4">
-        <figcaption className="mb-3 font-display text-sm font-semibold tracking-wide text-white">Size against miss distance</figcaption>
+      <GlowCard className="hud-corners p-5">
+       <figure>
+        <figcaption className="mb-4">
+          <span className="eyebrow !text-[0.65rem]">Both axes log scale</span>
+          <span className="mt-1 block font-display text-sm font-semibold tracking-wide text-white">Size against miss distance</span>
+        </figcaption>
         <div role="img" aria-label="Scatter chart of asteroid size against miss distance, both on log scales" className="h-72">
           <ResponsiveContainer width="100%" height="100%" initialDimension={initial}>
-            <ScatterChart margin={{ top: 8, right: 16, bottom: 24, left: 0 }}>
+            <ScatterChart margin={{ top: 8, right: 16, bottom: 36, left: 0 }}>
               <CartesianGrid stroke={GRID} />
               <XAxis
                 type="number"
@@ -61,16 +71,19 @@ export default function AsteroidCharts({ days, points }: { days: DayCount[]; poi
                 scale="log"
                 domain={["auto", "auto"]}
                 stroke={AXIS}
-                label={{ value: "Size (m, log scale)", position: "insideBottom", offset: -12, fill: AXIS }}
+                tickFormatter={(value: number) => String(Math.round(value))}
+                label={{ value: "Size (m, log scale)", position: "insideBottom", offset: -6, fill: AXIS }}
               />
               <YAxis
                 type="number"
                 dataKey="lunar"
+                width={78}
                 name="Miss distance"
                 unit=" LD"
                 scale="log"
                 domain={["auto", "auto"]}
                 stroke={AXIS}
+                tickFormatter={(value: number) => String(Number(value.toPrecision(2)))}
                 label={{ value: "Moon distances", angle: -90, position: "insideLeft", fill: AXIS }}
               />
               <ZAxis range={[70, 70]} />
@@ -95,7 +108,8 @@ export default function AsteroidCharts({ days, points }: { days: DayCount[]; poi
             </ScatterChart>
           </ResponsiveContainer>
         </div>
-      </figure>
+       </figure>
+      </GlowCard>
     </div>
   );
 }
