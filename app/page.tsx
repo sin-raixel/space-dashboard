@@ -7,7 +7,7 @@ type PageProps = { searchParams: Promise<{ date?: string | string[] }> };
 
 export default function Page({ searchParams }: PageProps) {
   return (
-    <PageShell current="apod" title="Astronomy picture of the day" narrow>
+    <PageShell current="apod" title="Astronomy picture of the day">
       <Suspense fallback={<ApodSkeleton />}>
         <ApodSection searchParams={searchParams} />
       </Suspense>
