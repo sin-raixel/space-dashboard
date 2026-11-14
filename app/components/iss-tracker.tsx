@@ -2,13 +2,15 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { LuGauge, LuMoveHorizontal, LuMoveVertical, LuMountain } from "react-icons/lu";
 import { appendToTrail, formatLatitude, formatLongitude } from "../lib/iss-geo";
 import type { IssPosition, TrailPoint } from "../lib/iss-types";
+import StatCard from "./stat-card";
 
 // Leaflet needs the browser's window object, so the map is only loaded on the client.
 const IssMap = dynamic(() => import("./iss-map"), {
   ssr: false,
-  loading: () => <div aria-hidden="true" className="h-[28rem] w-full rounded-2xl bg-violet-900/30 motion-safe:animate-pulse" />,
+  loading: () => <div aria-hidden="true" className="h-[28rem] w-full rounded-xl bg-violet-900/30 motion-safe:animate-pulse" />,
 });
 
 const POLL_MS = 5_000;
@@ -23,15 +25,6 @@ async function errorFrom(response: Response): Promise<string> {
   } catch {
     return "The ISS tracker is unavailable right now.";
   }
-}
-
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="panel panel-hover p-4">
-      <dt className="eyebrow !text-[0.65rem] !tracking-[0.2em]">{label}</dt>
-      <dd className="mt-2 font-display text-lg font-bold text-white sm:text-xl">{value}</dd>
-    </div>
-  );
 }
 
 export default function IssTracker() {
@@ -107,7 +100,9 @@ export default function IssTracker() {
         </div>
       )}
 
-      <IssMap position={position} trail={trail} follow={follow} />
+      <div className="hud-corners panel p-2">
+        <IssMap position={position} trail={trail} follow={follow} />
+      </div>
 
       <label className="flex w-fit cursor-pointer items-center gap-2 text-sm transition-colors hover:text-white">
         <input
@@ -121,17 +116,17 @@ export default function IssTracker() {
 
       {position ? (
         <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <Stat label="Latitude" value={formatLatitude(position.latitude)} />
-          <Stat label="Longitude" value={formatLongitude(position.longitude)} />
-          <Stat label="Altitude" value={`${whole.format(position.altitudeKm)} km`} />
-          <Stat label="Speed" value={`${whole.format(position.velocityKmh)} km/h`} />
+          <StatCard label="Latitude" value={formatLatitude(position.latitude)} icon={<LuMoveVertical />} />
+          <StatCard label="Longitude" value={formatLongitude(position.longitude)} icon={<LuMoveHorizontal />} />
+          <StatCard label="Altitude" value={whole.format(position.altitudeKm)} unit="km" icon={<LuMountain />} />
+          <StatCard label="Speed" value={whole.format(position.velocityKmh)} unit="km/h" icon={<LuGauge />} />
         </dl>
       ) : (
         !error && <p role="status">Locating the ISS&hellip;</p>
       )}
 
       {position && (
-        <p className="flex flex-wrap items-center gap-x-2 text-sm text-violet-100/80">
+        <p className="panel flex flex-wrap items-center gap-x-2 gap-y-1 px-5 py-3 text-sm text-violet-100/80">
           <span className="eyebrow inline-flex items-center gap-2 !text-[0.65rem]">
             <span className="relative flex size-2">
               <span className="absolute inline-flex size-full rounded-full bg-fuchsia-400 motion-safe:animate-[ping-soft_1.8s_ease-out_infinite]" />

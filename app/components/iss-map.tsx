@@ -32,7 +32,7 @@ export default function IssMap({
       minZoom={2}
       worldCopyJump
       scrollWheelZoom={false}
-      className="h-[28rem] w-full rounded-2xl border border-violet-400/30 shadow-[0_0_50px_-12px_rgb(139_92_246/0.6)]"
+      className="h-[28rem] w-full rounded-xl"
     >
       <TileLayer
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
