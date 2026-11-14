@@ -4,7 +4,7 @@ import { formatApodDate, selectApod } from "../lib/select-apod";
 
 type Props = { searchParams: Promise<{ date?: string | string[] }> };
 
-const linkClass = "text-violet-300 underline underline-offset-4 hover:text-white";
+const linkClass = "glow-link";
 
 export default async function ApodSection({ searchParams }: Props) {
   // Reading searchParams makes this part render at request time, inside <Suspense>.
@@ -13,10 +13,10 @@ export default async function ApodSection({ searchParams }: Props) {
 
   if (!result.ok) {
     return (
-      <div role="alert" className="rounded-2xl border border-red-400/30 bg-red-500/10 p-6">
-        <p className="font-semibold text-red-200">Couldn&rsquo;t load the astronomy picture</p>
+      <div role="alert" className="rounded-2xl border border-rose-400/30 bg-rose-500/10 p-6">
+        <p className="font-semibold text-rose-200">Couldn&rsquo;t load the astronomy picture</p>
         <p className="mt-2">{result.message}</p>
-        <Link href="/" className="mt-4 inline-block underline underline-offset-4 hover:text-white">
+        <Link href="/" className="glow-link mt-4 inline-block">
           Try again
         </Link>
       </div>
@@ -43,10 +43,10 @@ export default async function ApodSection({ searchParams }: Props) {
           <img
             src={selected.imageUrl}
             alt={selected.alt ?? selected.title}
-            className="w-full rounded-2xl border border-slate-800 bg-slate-900 object-contain"
+            className="w-full rounded-2xl border border-violet-400/25 bg-violet-950/40 object-contain shadow-[0_0_50px_-12px_rgb(139_92_246/0.6)] transition-all duration-500 hover:scale-[1.01] hover:border-violet-300/60 hover:shadow-[0_0_70px_-8px_rgb(168_85_247/0.85)]"
           />
         ) : (
-          <div className="grid aspect-video place-items-center rounded-2xl border border-slate-800 bg-slate-900 p-6 text-center">
+          <div className="panel grid aspect-video place-items-center p-6 text-center">
             This one is a video, so there&rsquo;s no still picture to show here.
           </div>
         )}
@@ -65,12 +65,12 @@ export default async function ApodSection({ searchParams }: Props) {
         </figcaption>
       </figure>
 
-      <p className="mt-8 text-sm text-violet-300">{formatApodDate(selected.date)}</p>
-      <h2 className="mt-1 text-3xl font-bold tracking-tight text-white">{selected.title}</h2>
-      <p className="mt-4 max-w-3xl leading-relaxed whitespace-pre-line">{selected.explanation}</p>
+      <p className="eyebrow mt-10">{formatApodDate(selected.date)}</p>
+      <h2 className="mt-2 font-display text-2xl font-bold tracking-wide text-white sm:text-3xl">{selected.title}</h2>
+      <p className="mt-4 max-w-3xl leading-relaxed whitespace-pre-line text-violet-100/80">{selected.explanation}</p>
 
       <nav aria-label="Pictures from the past week" className="mt-12">
-        <h3 className="text-lg font-semibold text-white">The past week</h3>
+        <h3 className="font-display text-lg font-semibold tracking-wide text-white">The past week</h3>
         <ul className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-7">
           {result.items.map((item) => {
             const current = item.date === selected.date;
@@ -80,17 +80,19 @@ export default async function ApodSection({ searchParams }: Props) {
                   href={`/?date=${item.date}`}
                   scroll={false}
                   aria-current={current ? "true" : undefined}
-                  className={`block overflow-hidden rounded-lg border transition-all ${
-                    current ? "border-violet-400" : "border-slate-800 opacity-70 hover:opacity-100"
+                  className={`group block overflow-hidden rounded-lg border transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_10px_30px_-8px_rgb(139_92_246/0.8)] ${
+                    current
+                      ? "border-violet-300 shadow-[0_0_22px_-4px_rgb(168_85_247/0.9)]"
+                      : "border-violet-400/20 opacity-70 hover:border-violet-300/70 hover:opacity-100"
                   }`}
                 >
                   {item.thumbUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={item.thumbUrl} alt="" loading="lazy" className="aspect-square w-full object-cover" />
+                    <img src={item.thumbUrl} alt="" loading="lazy" className="aspect-square w-full object-cover transition-transform duration-500 group-hover:scale-110" />
                   ) : (
-                    <div className="grid aspect-square place-items-center bg-slate-900 text-xs">Video</div>
+                    <div className="grid aspect-square place-items-center bg-violet-950/60 text-xs">Video</div>
                   )}
-                  <span className="block px-2 py-1 text-xs">{formatApodDate(item.date).replace(/, \d{4}$/, "")}</span>
+                  <span className="block bg-violet-950/50 px-2 py-1 text-xs transition-colors group-hover:text-white">{formatApodDate(item.date).replace(/, \d{4}$/, "")}</span>
                 </Link>
               </li>
             );
@@ -98,7 +100,7 @@ export default async function ApodSection({ searchParams }: Props) {
         </ul>
       </nav>
 
-      <p className="mt-10 text-xs text-slate-500">
+      <p className="mt-10 text-xs text-violet-300/50">
         Data from NASA Science&rsquo;s picture-of-the-day feed, loaded {fetchedAt} (Philippine time) and cached for hours.
       </p>
     </div>
