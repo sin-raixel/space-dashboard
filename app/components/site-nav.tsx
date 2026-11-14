@@ -1,10 +1,11 @@
 import Link from "next/link";
-import { LuImage, LuOrbit, LuSatellite } from "react-icons/lu";
+import { LuImage, LuOrbit, LuSatellite, LuTelescope } from "react-icons/lu";
 
 const links = [
   { id: "apod", href: "/", label: "Picture of the day", Icon: LuImage },
   { id: "asteroids", href: "/asteroids", label: "Asteroids", Icon: LuOrbit },
   { id: "iss", href: "/iss", label: "ISS tracker", Icon: LuSatellite },
+  { id: "sky", href: "/sky", label: "Sky tonight", Icon: LuTelescope },
 ] as const;
 
 export type NavId = (typeof links)[number]["id"];
