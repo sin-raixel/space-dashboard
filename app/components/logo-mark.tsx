@@ -1,4 +1,4 @@
-// The Starboard mark: a four-point star with a dim left half (port) and a lit right half (starboard).
+// The spaceboard mark: a four-point star with a dim left half (port) and a lit right half (spaceboard).
 // It matches app/icon.svg, without the tile behind it.
 const STAR = "M256 62 Q278 234 450 256 Q278 278 256 450 Q234 278 62 256 Q234 234 256 62 Z";
 
@@ -10,7 +10,7 @@ export default function LogoMark({ className }: { className?: string }) {
           <stop offset="0" stopColor="#8b5cf6" />
           <stop offset="1" stopColor="#5b21b6" />
         </linearGradient>
-        <linearGradient id="mark-starboard" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="mark-spaceboard" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor="#ffffff" />
           <stop offset="0.45" stopColor="#f5d0fe" />
           <stop offset="1" stopColor="#d946ef" />
@@ -23,7 +23,7 @@ export default function LogoMark({ className }: { className?: string }) {
         </clipPath>
       </defs>
       <path d={STAR} fill="url(#mark-port)" clipPath="url(#mark-left)" />
-      <path d={STAR} fill="url(#mark-starboard)" clipPath="url(#mark-right)" />
+      <path d={STAR} fill="url(#mark-spaceboard)" clipPath="url(#mark-right)" />
     </svg>
   );
 }

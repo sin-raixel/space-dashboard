@@ -14,7 +14,7 @@ const exo = Exo_2({
 });
 
 export const metadata: Metadata = {
-  title: { default: "Starboard", template: "%s | Starboard" },
+  title: { default: "Spaceboard", template: "%s | Spaceboard" },
   description: "Astronomy picture of the day, near-Earth asteroids, a live ISS tracker, and the constellations above you.",
 };
 
