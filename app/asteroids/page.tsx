@@ -5,7 +5,7 @@ import PageShell from "../components/page-shell";
 
 type PageProps = { searchParams: Promise<Record<string, string | string[] | undefined>> };
 
-export const metadata = { title: "Near-Earth asteroids | Space dashboard" };
+export const metadata = { title: "Near-Earth asteroids" };
 
 export default function Page({ searchParams }: PageProps) {
   return (

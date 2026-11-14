@@ -15,7 +15,7 @@ export default function PageShell({ current, title, description, narrow = false,
       <main className={`mx-auto px-6 py-10 ${narrow ? "max-w-4xl" : "max-w-5xl"}`}>
         <SiteNav current={current} />
         <header className="mb-12">
-          <p className="eyebrow">Space dashboard</p>
+          <p className="eyebrow">Starboard</p>
           <h1 className="page-title mt-3 text-3xl sm:text-5xl">{title}</h1>
           {description && <p className="mt-5 max-w-2xl leading-relaxed text-violet-100/80">{description}</p>}
         </header>
