@@ -32,7 +32,7 @@ export default function IssMap({
       minZoom={2}
       worldCopyJump
       scrollWheelZoom={false}
-      className="h-[28rem] w-full rounded-2xl border border-slate-800"
+      className="h-[28rem] w-full rounded-2xl border border-violet-400/30 shadow-[0_0_50px_-12px_rgb(139_92_246/0.6)]"
     >
       <TileLayer
         url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -41,8 +41,15 @@ export default function IssMap({
         className="iss-tiles"
       />
       {splitAtAntimeridian(trail).map((segment, index) => (
-        <Polyline key={index} positions={segment} pathOptions={{ color: "#a78bfa", weight: 2, opacity: 0.85 }} />
+        <Polyline key={index} positions={segment} pathOptions={{ color: "#c084fc", weight: 2, opacity: 0.9 }} />
       ))}
+      {position && (
+        <CircleMarker
+          center={[position.latitude, position.longitude]}
+          radius={18}
+          pathOptions={{ stroke: false, fillColor: "#a855f7", fillOpacity: 0.22 }}
+        />
+      )}
       {position && (
         <CircleMarker
           center={[position.latitude, position.longitude]}

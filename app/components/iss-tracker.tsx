@@ -8,7 +8,7 @@ import type { IssPosition, TrailPoint } from "../lib/iss-types";
 // Leaflet needs the browser's window object, so the map is only loaded on the client.
 const IssMap = dynamic(() => import("./iss-map"), {
   ssr: false,
-  loading: () => <div aria-hidden="true" className="h-[28rem] w-full rounded-2xl bg-slate-800 motion-safe:animate-pulse" />,
+  loading: () => <div aria-hidden="true" className="h-[28rem] w-full rounded-2xl bg-violet-900/30 motion-safe:animate-pulse" />,
 });
 
 const POLL_MS = 5_000;
@@ -27,9 +27,9 @@ async function errorFrom(response: Response): Promise<string> {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-4">
-      <dt className="text-xs font-semibold tracking-widest text-violet-300 uppercase">{label}</dt>
-      <dd className="mt-2 text-xl font-bold text-white">{value}</dd>
+    <div className="panel panel-hover p-4">
+      <dt className="eyebrow !text-[0.65rem] !tracking-[0.2em]">{label}</dt>
+      <dd className="mt-2 font-display text-lg font-bold text-white sm:text-xl">{value}</dd>
     </div>
   );
 }
@@ -99,8 +99,8 @@ export default function IssTracker() {
   return (
     <div className="space-y-8">
       {error && (
-        <div role="alert" className="rounded-xl border border-red-400/30 bg-red-500/10 p-4">
-          <p className="font-semibold text-red-200">Live position unavailable</p>
+        <div role="alert" className="rounded-xl border border-rose-400/30 bg-rose-500/10 p-4">
+          <p className="font-semibold text-rose-200">Live position unavailable</p>
           <p className="mt-1 text-sm">
             {error} {position ? "Showing the last known position." : ""}
           </p>
@@ -109,12 +109,12 @@ export default function IssTracker() {
 
       <IssMap position={position} trail={trail} follow={follow} />
 
-      <label className="flex items-center gap-2 text-sm">
+      <label className="flex w-fit cursor-pointer items-center gap-2 text-sm transition-colors hover:text-white">
         <input
           type="checkbox"
           checked={follow}
           onChange={(event) => setFollow(event.target.checked)}
-          className="size-4 accent-violet-500"
+          className="size-4 cursor-pointer accent-violet-500"
         />
         Keep the map centered on the ISS
       </label>
@@ -131,7 +131,14 @@ export default function IssTracker() {
       )}
 
       {position && (
-        <p className="text-sm">
+        <p className="flex flex-wrap items-center gap-x-2 text-sm text-violet-100/80">
+          <span className="eyebrow inline-flex items-center gap-2 !text-[0.65rem]">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full rounded-full bg-fuchsia-400 motion-safe:animate-[ping-soft_1.8s_ease-out_infinite]" />
+              <span className="relative inline-flex size-2 rounded-full bg-fuchsia-400" />
+            </span>
+            Live
+          </span>
           {VISIBILITY[position.visibility] ?? position.visibility}. Position time:{" "}
           {new Date(position.timestamp * 1000).toLocaleTimeString("en-PH", {
             timeZone: "Asia/Manila",
@@ -143,7 +150,7 @@ export default function IssTracker() {
         </p>
       )}
 
-      <p className="text-xs text-slate-500">
+      <p className="text-xs text-violet-300/50">
         Orbit data from wheretheiss.at. Map &copy; OpenStreetMap contributors. The purple line is where the ISS has
         been over roughly the last 90 minutes, about one orbit.
       </p>
