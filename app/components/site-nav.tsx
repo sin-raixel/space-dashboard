@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { LuImage, LuOrbit, LuSatellite, LuTelescope } from "react-icons/lu";
+import LogoMark from "./logo-mark";
 
 const links = [
   { id: "apod", href: "/", label: "Picture of the day", Icon: LuImage },
@@ -17,11 +18,8 @@ export default function SiteNav({ current }: { current: NavId }) {
         href="/"
         className="group flex items-center gap-2 font-display text-sm font-bold tracking-[0.25em] text-white uppercase"
       >
-        <span
-          aria-hidden="true"
-          className="size-3 rounded-full bg-gradient-to-br from-violet-300 to-fuchsia-600 shadow-[0_0_14px_3px_rgb(139_92_246/0.8)] transition-transform duration-300 group-hover:scale-150"
-        />
-        Cosmos
+        <LogoMark className="size-6 drop-shadow-[0_0_8px_rgb(217_70_239/0.6)] transition-transform duration-300 group-hover:rotate-[18deg] group-hover:scale-110 motion-reduce:transition-none" />
+        Starboard
       </Link>
       <ul className="flex flex-wrap gap-2 rounded-full border border-violet-400/20 bg-violet-950/40 p-1.5 text-sm font-medium backdrop-blur">
         {links.map(({ id, href, label, Icon }) => (

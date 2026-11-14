@@ -1,7 +1,7 @@
 import PageShell from "../components/page-shell";
 import SkyView from "../components/sky-view";
 
-export const metadata = { title: "Sky tonight | Space dashboard" };
+export const metadata = { title: "Sky tonight" };
 
 export default function Page() {
   return (

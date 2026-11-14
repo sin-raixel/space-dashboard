@@ -1,7 +1,7 @@
 import IssTracker from "../components/iss-tracker";
 import PageShell from "../components/page-shell";
 
-export const metadata = { title: "ISS tracker | Space dashboard" };
+export const metadata = { title: "ISS tracker" };
 
 export default function Page() {
   return (
